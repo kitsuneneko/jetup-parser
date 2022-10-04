@@ -5,7 +5,7 @@ import { UserService } from './user/user.service';
 import cheerio from 'cheerio';
 import axios from 'axios';
 
-async function bootstrap() {
+async function initParse() {
   const application = await NestFactory.createApplicationContext(
     AppModule,
   );
@@ -17,13 +17,17 @@ async function bootstrap() {
         const userName = $(el).find('.user-name').text();
         const position = $(el).find('.position').text();
         const userText = $(el).find('.user-text').text();
-        const userData: User = { userName, position, userText }
-        userService.create(userData)
+        const userData: User = { userName, position, userText };
+        userService.create(userData);
 
     });
   }).catch(err => console.error(err));
 
+}
+
+async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  initParse();
   await app.listen(3000);
 }
 bootstrap();
